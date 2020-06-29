@@ -3,6 +3,12 @@ variable "nginx-hello-name" {
   default     = "nginx-hello"
 }
 
+resource "kubernetes_namespace" "apps" {
+  metadata {
+    name = "apps"
+  }
+}
+
 resource "kubernetes_deployment" "nginx-hello" {
   depends_on = [kubernetes_namespace.apps]
 
