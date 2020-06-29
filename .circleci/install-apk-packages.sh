@@ -1,6 +1,6 @@
 #!/bin/sh -leo pipefail
 
-apk add --no-cache --update g++ python3-dev libffi-dev openssl openssl-dev sudo
+apk add --no-cache --update g++ python3-dev libffi-dev openssl openssl-dev sudo curl
 echo "Set disable_coredump false" >> /etc/sudo.conf
 apk add --no-cache python3 py3-pip
 apk add --no-cache docker
