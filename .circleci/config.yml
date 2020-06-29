@@ -54,15 +54,20 @@ jobs:
               -var="state_region=${AWS_DEFAULT_REGION}"
             echo "export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)" >> $BASH_ENV
             echo "export AWS_ECR_REPONAME=$(terraform output ecr_repository_name)" >> $BASH_ENV
-      - aws-ecr/build-and-push-image: # https://circleci.com/orbs/registry/orb/circleci/aws-ecr
-          account-url: AWS_ECR_ACCOUNT_URL
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          no-output-timeout: 3m
-          path: apps/nginx-hello/
-          region: AWS_REGION
-          repo: ${AWS_ECR_REPONAME}
-          tag: latest,${CIRCLE_SHA1}
+      - run:
+          name: build | login in repo
+          command: |
+            source $BASH_ENV
+            aws ecr get-login-password --region ${AWS_REGION} | \
+            docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
+      - run:
+          name: build | nginx-hello
+          command: |
+            cd apps/nginx-hello
+            docker build -f Dockerfile -t ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1} .
+      - run:
+          name: build | push nginx-hello
+          command: docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
 
 
 workflows:
