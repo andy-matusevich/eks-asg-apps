@@ -14,6 +14,7 @@ resource "kubernetes_deployment" "nginx-hello" {
 
   metadata {
     name   = var.nginx-hello-name
+    namespace = kubernetes_namespace.apps.metadata[0].name
     labels = {
       app = var.nginx-hello-name
     }
