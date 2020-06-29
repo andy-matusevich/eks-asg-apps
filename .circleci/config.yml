@@ -40,6 +40,10 @@ jobs:
           name: build | set env variables
           command: |
             cd terraform/
+            echo -e "key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate"
+            echo -e "bucket=${CIRCLE_PROJECT_REPONAME}"
+            echo -e "region=${AWS_DEFAULT_REGION}"
+            echo -e "state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate"
             terraform init \
               -backend-config="key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate" \
               -backend-config="bucket=${CIRCLE_PROJECT_REPONAME}" \
