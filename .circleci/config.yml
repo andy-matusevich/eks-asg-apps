@@ -38,6 +38,7 @@ jobs:
       CIRCLE_INFRA_PROJECT_REPONAME: eks-asg-tests
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: build | install apk packages
           command: sh .circleci/install-apk-packages.sh
