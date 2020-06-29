@@ -70,14 +70,14 @@ resource "kubernetes_ingress" "nginx-hello" {
 
   spec {
     backend {
-      service_name = kubernetes_deployment.nginx-hello.metadata.name
+      service_name = kubernetes_deployment.nginx-hello.metadata[0].name
       service_port = "80"
     }
     rule {
       http {
         path {
           backend {
-            service_name = kubernetes_deployment.nginx-hello.metadata.name
+            service_name = kubernetes_deployment.nginx-hello.metadata[0].name
             service_port = "80"
           }
           path = "/"
@@ -86,7 +86,7 @@ resource "kubernetes_ingress" "nginx-hello" {
     }
   }
   metadata {
-    name      = kubernetes_deployment.nginx-hello.metadata.name
-    namespace = kubernetes_namespace.apps.metadata.name
+    name      = kubernetes_deployment.nginx-hello.metadata[0].name
+    namespace = kubernetes_namespace.apps.metadata[0].name
   }
 }
