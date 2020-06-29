@@ -14,3 +14,8 @@ data "aws_eks_cluster_auth" "cluster" {
   name = data.terraform_remote_state.aws.outputs.cluster_name
 }
 
+resource "kubernetes_namespace" "apps" {
+  metadata {
+    name = "apps"
+  }
+}

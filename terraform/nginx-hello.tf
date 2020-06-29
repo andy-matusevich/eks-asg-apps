@@ -1,8 +1,11 @@
 variable "nginx-hello-name" {
-  value = "nginx-hello"
+  description = "Application name"
+  default     = "nginx-hello"
 }
 
 resource "kubernetes_deployment" "nginx-hello" {
+  depends_on = [kubernetes_namespace.apps]
+
   metadata {
     name   = var.nginx-hello-name
     labels = {
@@ -59,5 +62,31 @@ resource "kubernetes_deployment" "nginx-hello" {
         }
       }
     }
+  }
+}
+
+resource "kubernetes_ingress" "nginx-hello" {
+  depends_on = [kubernetes_deployment.nginx-hello]
+
+  spec {
+    backend {
+      service_name = kubernetes_deployment.nginx-hello.metadata.name
+      service_port = "80"
+    }
+    rule {
+      http {
+        path {
+          backend {
+            service_name = kubernetes_deployment.nginx-hello.metadata.name
+            service_port = "80"
+          }
+          path = "/"
+        }
+      }
+    }
+  }
+  metadata {
+    name      = kubernetes_deployment.nginx-hello.metadata.name
+    namespace = kubernetes_namespace.apps.metadata.name
   }
 }
