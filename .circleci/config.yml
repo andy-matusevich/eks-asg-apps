@@ -22,6 +22,7 @@ aliases:
 
 orbs:
   aws-eks: circleci/aws-eks@0.2.7
+  kubernetes: circleci/kubernetes@0.11.0
 
 
 jobs:
@@ -44,6 +45,7 @@ jobs:
           command: |
             mkdir -p ~/.kube/
             terraform output kubeconfig > ~/.kube/config
+      - kubernetes/install
       - aws-eks/install-eksctl
       - aws-eks/update-kubeconfig-with-authenticator:
           aws-region: "${AWS_REGION}"
