@@ -64,7 +64,7 @@ jobs:
           name: build | nginx-hello
           command: |
             cd apps/nginx-hello
-            docker build -f Dockerfile -t ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1} .
+            docker build -f Dockerfile -t "$AWS_ECR_ACCOUNT_URL:$CIRCLE_SHA1" .
       - run:
           name: build | push nginx-hello
           command: docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
