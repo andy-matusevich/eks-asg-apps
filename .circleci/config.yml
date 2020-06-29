@@ -31,6 +31,8 @@ jobs:
   build:
     executor: docker_terraform
     working_directory: '~/repo'
+    environment:
+      CIRCLE_INFRA_PROJECT_REPONAME: eks-asg-tests
     steps:
       - checkout
       - run:
@@ -40,16 +42,12 @@ jobs:
           name: build | set env variables
           command: |
             cd terraform/
-            echo -e "key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate"
-            echo -e "bucket=eks-asg-tests"
-            echo -e "region=${AWS_DEFAULT_REGION}"
-            echo -e "state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate"
             terraform init \
               -backend-config="key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate" \
-              -backend-config="bucket=${CIRCLE_PROJECT_REPONAME}" \
+              -backend-config="bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
               -backend-config="region=${AWS_DEFAULT_REGION}"
             terraform refresh \
-              -var="state_bucket=${CIRCLE_PROJECT_REPONAME}" \
+              -var="state_bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
               -var="state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate" \
               -var="state_region=${AWS_DEFAULT_REGION}"
             export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)
