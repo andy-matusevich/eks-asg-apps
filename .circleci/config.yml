@@ -29,9 +29,10 @@ aliases:
 jobs:
 
   build:
-    executor: docker_terraform
+    executor: docker_stable
     working_directory: '~/repo'
     environment:
+      TERRAFORM_VERSION: 0.12.25
       CIRCLE_INFRA_PROJECT_REPONAME: eks-asg-tests
     steps:
       - checkout

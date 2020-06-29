@@ -1,9 +1,13 @@
 #!/bin/sh -leo pipefail
 
-apk update
 apk add --no-cache --update g++ python3-dev libffi-dev openssl openssl-dev sudo
 echo "Set disable_coredump false" >> /etc/sudo.conf
-apk add --no-cache --update curl python3 bash jq
+apk add --no-cache curl python3
+apk add --no-cache docker
 pip3 install --upgrade pip setuptools
-pip3 install --upgrade awscli docker
-
+pip3 install --upgrade awscli
+cd /usr/local/bin && \
+curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
