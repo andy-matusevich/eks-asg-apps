@@ -20,6 +20,10 @@ aliases:
         only: master
 
 
+orbs:
+  aws-eks: circleci/aws-eks@0.2.7
+
+
 jobs:
 
   deploy_apps:
@@ -35,6 +39,15 @@ jobs:
       - run:
           name: build | install apk packages
           command: sh .circleci/install-apk-packages.sh
+      - run:
+          name: aws infra | make kubeconfig
+          command: |
+            mkdir -p ~/.kube/
+            terraform output kubeconfig > ~/.kube/config
+      - aws-eks/install-eksctl
+      - aws-eks/update-kubeconfig-with-authenticator:
+          aws-region: "${AWS_REGION}"
+          cluster-name: "${CIRCLE_INFRA_PROJECT_REPONAME}"
       - run:
           name: build | set env variables
           command: |
