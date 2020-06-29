@@ -32,6 +32,7 @@ jobs:
     executor: docker_stable
     working_directory: '~/repo'
     environment:
+      BASH_ENV: /etc/profile
       TERRAFORM_VERSION: 0.12.25
       CIRCLE_INFRA_PROJECT_REPONAME: eks-asg-tests
     steps:
@@ -51,8 +52,8 @@ jobs:
               -var="state_bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
               -var="state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate" \
               -var="state_region=${AWS_DEFAULT_REGION}"
-            export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)
-            export AWS_ECR_REPONAME=$(terraform output ecr_repository_name)
+            echo "export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)" >> $BASH_ENV
+            echo "export AWS_ECR_REPONAME=$(terraform output ecr_repository_name)" >> $BASH_ENV
       - aws-ecr/build-and-push-image: # https://circleci.com/orbs/registry/orb/circleci/aws-ecr
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: AWS_ACCESS_KEY_ID
