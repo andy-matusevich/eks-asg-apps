@@ -10,7 +10,7 @@ variable "state_region" {}
 variable "state_bucket" {}
 variable "state_bucket_key" {}
 
-data "terraform_remote_state" "aws" {
+data "terraform_remote_state" "ecr" {
   backend = "s3"
   config {
     bucket = var.state_bucket
@@ -18,3 +18,4 @@ data "terraform_remote_state" "aws" {
     region = var.state_region
   }
 }
+
