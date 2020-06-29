@@ -5,6 +5,7 @@ executors:
   docker_stable:
     docker:
       - image: 'docker:stable'
+    resource_class: 'small'
   docker_terraform:
     docker:
       - image: 'hashicorp/terraform:0.12.25'
