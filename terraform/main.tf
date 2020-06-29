@@ -9,8 +9,9 @@ terraform {
 variable "state_region" {}
 variable "state_bucket" {}
 variable "state_bucket_key" {}
+variable "commit_sha1" {}
 
-data "terraform_remote_state" "ecr" {
+data "terraform_remote_state" "aws" {
   backend = "s3"
   config  = {
     bucket = var.state_bucket
