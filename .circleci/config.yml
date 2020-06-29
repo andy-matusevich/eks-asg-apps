@@ -63,11 +63,14 @@ jobs:
       - run:
           name: build | nginx-hello
           command: |
+            source $BASH_ENV
             cd apps/nginx-hello
             docker build -f Dockerfile -t "$AWS_ECR_ACCOUNT_URL:$CIRCLE_SHA1" .
       - run:
           name: build | push nginx-hello
-          command: docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
+          command: |
+            source $BASH_ENV
+            docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
 
 
 workflows:
