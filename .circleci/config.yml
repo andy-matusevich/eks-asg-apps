@@ -41,7 +41,7 @@ jobs:
           command: |
             cd terraform/
             echo -e "key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate"
-            echo -e "bucket=${CIRCLE_PROJECT_REPONAME}"
+            echo -e "bucket=eks-asg-tests"
             echo -e "region=${AWS_DEFAULT_REGION}"
             echo -e "state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate"
             terraform init \
