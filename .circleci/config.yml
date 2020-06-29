@@ -88,7 +88,7 @@ jobs:
               -lock-timeout=30s \
               -refresh=true \
               -var="state_bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
-              -var="state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate" \
+              -var="state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate" \
               -var="state_region=${AWS_DEFAULT_REGION}" \
               -var="commit_sha1=${CIRCLE_SHA1}" \
               .

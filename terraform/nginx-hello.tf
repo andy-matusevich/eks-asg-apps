@@ -9,19 +9,29 @@ resource "kubernetes_namespace" "apps" {
   }
 }
 
+data "kubernetes_service" "nginx-hello" {
+  metadata {
+    name      = var.nginx-hello-name
+    namespace = kubernetes_namespace.apps.metadata[0].name
+    labels    = {
+      app = var.nginx-hello-name
+    }
+  }
+}
+
 resource "kubernetes_deployment" "nginx-hello" {
   depends_on = [kubernetes_namespace.apps]
 
   metadata {
-    name   = var.nginx-hello-name
+    name      = var.nginx-hello-name
     namespace = kubernetes_namespace.apps.metadata[0].name
-    labels = {
+    labels    = {
       app = var.nginx-hello-name
     }
   }
 
   spec {
-    replicas = 2
+    replicas = 1
 
     selector {
       match_labels = {
@@ -47,7 +57,7 @@ resource "kubernetes_deployment" "nginx-hello" {
               memory = "128Mi"
             }
             requests {
-              cpu    = "250m"
+              cpu    = "200m"
               memory = "50Mi"
             }
           }
