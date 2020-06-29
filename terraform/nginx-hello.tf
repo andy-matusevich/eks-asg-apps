@@ -37,7 +37,7 @@ resource "kubernetes_deployment" "nginx-hello" {
 
       spec {
         container {
-          image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}}"
+          image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
           name  = var.nginx-hello-name
 
           resources {
@@ -86,7 +86,7 @@ resource "kubernetes_ingress" "nginx-hello" {
             service_name = kubernetes_deployment.nginx-hello.metadata[0].name
             service_port = "80"
           }
-          path = "/"
+          path = "/nginx-hello"
         }
       }
     }
