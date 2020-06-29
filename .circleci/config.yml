@@ -60,20 +60,23 @@ jobs:
               -var="commit_sha1=${CIRCLE_SHA1}"
             echo "export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)" >> $BASH_ENV
             echo "export AWS_ECR_REPONAME=$(terraform output ecr_repository_name)" >> $BASH_ENV
-            source $BASH_ENV
       - run:
           name: build | login in repo
           command: |
+            source $BASH_ENV
             aws ecr get-login-password --region ${AWS_REGION} | \
             docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
       - run:
           name: build | build app [nginx-hello]
           command: |
+            source $BASH_ENV
             cd apps/nginx-hello
             docker build -f Dockerfile -t "$AWS_ECR_ACCOUNT_URL:$CIRCLE_SHA1" .
       - run:
           name: build | push app [nginx-hello]
-          command: docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
+          command: |
+            source $BASH_ENV
+            docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
       - run:
           name: build | deploy app [nginx-hello]
           command: |
