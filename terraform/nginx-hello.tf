@@ -9,6 +9,35 @@ resource "kubernetes_namespace" "apps" {
   }
 }
 
+resource "kubernetes_pod" "nginx-hello" {
+  metadata {
+    name   = var.nginx-hello-name
+    labels = {
+      app = var.nginx-hello-name
+    }
+  }
+
+  spec {
+    container {
+      image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
+      name  = var.nginx-hello-name
+    }
+    affinity {
+      node_affinity {
+        required_during_scheduling_ignored_during_execution {
+          node_selector_term {
+            match_expressions {
+              key      = "node.kubernetes.io/assignment"
+              operator = "In"
+              values   = ["applications"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 resource "kubernetes_service" "nginx-hello" {
   metadata {
     name      = var.nginx-hello-name
@@ -25,22 +54,6 @@ resource "kubernetes_service" "nginx-hello" {
     port {
       port        = 80
       target_port = 80
-    }
-  }
-}
-
-resource "kubernetes_pod" "nginx-hello" {
-  metadata {
-    name   = var.nginx-hello-name
-    labels = {
-      app = var.nginx-hello-name
-    }
-  }
-
-  spec {
-    container {
-      image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
-      name  = var.nginx-hello-name
     }
   }
 }
@@ -63,11 +76,6 @@ resource "kubernetes_deployment" "nginx-hello" {
     selector {
       match_labels = {
         app = var.nginx-hello-name
-      }
-      match_expressions {
-        key      = "node.kubernetes.io/assignment"
-        operator = "In"
-        values   = ["applications"]
       }
     }
 
@@ -94,9 +102,6 @@ resource "kubernetes_deployment" "nginx-hello" {
               memory = "50Mi"
             }
           }
-        }
-        node_selector = {
-          node.kubernetes.io/assignment = "applications"
         }
       }
     }
