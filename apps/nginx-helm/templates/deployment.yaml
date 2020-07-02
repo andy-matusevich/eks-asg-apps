@@ -30,10 +30,10 @@ spec:
         name: {{ .Values.app.name | quote }}
         resources:
           limits:
-            cpu: 500m
-            memory: 128Mi
+            cpu: 250m
+            memory: 100Mi
           requests:
-            cpu: 200m
+            cpu: 100m
             memory: 50Mi
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30

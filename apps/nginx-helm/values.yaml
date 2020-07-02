@@ -1,5 +1,5 @@
 app:
-  name: nginx-manifest
+  name: nginx-helm
   replicas: 2
 
 container:
@@ -10,4 +10,5 @@ service:
   type: ClusterIP
   port: 80
   protocol: TCP
+  path: /nginx2
 

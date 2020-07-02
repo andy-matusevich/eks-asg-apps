@@ -5,11 +5,11 @@ metadata:
 spec:
   backend:
     serviceName: {{ .Values.app.name | quote }}
-    servicePort: 80
+    servicePort: {{ .Values.service.port }}
   rules:
   - http:
       paths:
       - backend:
           serviceName: {{ .Values.app.name | quote }}
-          servicePort: 80
-        path: /nginx1
+          servicePort: {{ .Values.service.port }}
+        path: {{ .Values.service.path | quote }}
