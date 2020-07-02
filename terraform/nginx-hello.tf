@@ -25,13 +25,13 @@ resource "kubernetes_pod" "nginx-hello" {
     affinity {
       node_affinity {
         required_during_scheduling_ignored_during_execution {
-          node_selector_term {
-            match_expressions {
-              key      = "node.kubernetes.io/assignment"
-              operator = "In"
-              values   = ["applications"]
-            }
-          }
+//          node_selector_term {
+//            match_expressions {
+//              key      = "node.kubernetes.io/assignment"
+//              operator = "In"
+//              values   = ["applications"]
+//            }
+//          }
         }
       }
     }

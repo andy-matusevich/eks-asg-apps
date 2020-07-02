@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.app.name | quote }}
+  name: {{ .Values.app.name | quote }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: {{ Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name | quote }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name | quote }}
+    spec:
+      containers:
+      - image: {{ .Values.container.image }}
+        imagePullPolicy: IfNotPresent
+        name: {{ .Values.app.name | quote }}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 200m
+            memory: 50Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30

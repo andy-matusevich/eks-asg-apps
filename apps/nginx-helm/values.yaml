@@ -1,0 +1,13 @@
+app:
+  name: nginx-manifest
+  replicas: 2
+
+container:
+  image: 476148382817.dkr.ecr.us-east-2.amazonaws.com/eks-asg-tests:latest
+  port: 80
+
+service:
+  type: ClusterIP
+  port: 80
+  protocol: TCP
+

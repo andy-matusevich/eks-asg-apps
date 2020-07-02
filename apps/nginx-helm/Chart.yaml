@@ -1,0 +1,11 @@
+apiVersion: v1
+appVersion: 0.0.1
+description: NGINX test application
+kubeVersion: ^1.15.0-0
+maintainers:
+- email: andy.matusevich@gmail.com
+  name: andy.matusevich
+name: nginx-helm
+sources:
+- https://github.com/andy-matusevich/eks-asg-apps/apps/nginx-helm
+version: 0.0.1
