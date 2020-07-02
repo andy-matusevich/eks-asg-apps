@@ -23,6 +23,7 @@ aliases:
 orbs:
   aws-eks: circleci/aws-eks@0.2.7
   kubernetes: circleci/kubernetes@0.11.0
+  helm: circleci/helm@1.0
 
 
 jobs:
@@ -92,15 +93,22 @@ jobs:
               -var="state_region=${AWS_DEFAULT_REGION}" \
               -var="commit_sha1=${CIRCLE_SHA1}" \
               .
-      - run:
-          name: build | deploy app [nginx-helm]
-          command: |
-            cd terraform/
-            helm --namespace apps upgrade nginx-helm \
-              --install \
-              --create-namespace \
-              --set="container.image=$(terraform output ecr_registry_url):${CIRCLE_SHA1}"
-              ../apps/nginx-helm/
+      - helm/install-helm-client:
+          chart: nginx-helm/
+          helm-version: v3.2.3
+          namespace: apps
+          no-output-timeout: 2m
+          release-name: nginx-helm
+          values-to-override: container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}
+#      - run:
+#          name: build | deploy app [nginx-helm]
+#          command: |
+#            cd apps/
+#            helm --namespace apps upgrade nginx-helm \
+#              --install \
+#              --create-namespace \
+#              --set="container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}"
+#              nginx-helm/
 
 
 workflows:
