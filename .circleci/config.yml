@@ -93,7 +93,7 @@ jobs:
               -var="state_region=${AWS_DEFAULT_REGION}" \
               -var="commit_sha1=${CIRCLE_SHA1}" \
               .
-      - helm/install-helm-client:
+      - helm/install-helm-chart:
           chart: nginx-helm/
           helm-version: v3.2.3
           namespace: apps
