@@ -10,5 +10,5 @@ service:
   type: ClusterIP
   port: 80
   protocol: TCP
-  path: /nginx2
+  path: /nginx-helm
 

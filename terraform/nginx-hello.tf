@@ -123,7 +123,7 @@ resource "kubernetes_ingress" "nginx-hello" {
             service_name = kubernetes_deployment.nginx-hello.metadata[0].name
             service_port = "80"
           }
-          path = "/nginx"
+          path = "/nginx-hello"
         }
       }
     }
