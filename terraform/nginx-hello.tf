@@ -22,9 +22,9 @@ resource "kubernetes_pod" "nginx-hello" {
       image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
       name  = var.nginx-hello-name
     }
-    affinity {
-      node_affinity {
-        required_during_scheduling_ignored_during_execution {
+//    affinity {
+//      node_affinity {
+//        required_during_scheduling_ignored_during_execution {
 //          node_selector_term {
 //            match_expressions {
 //              key      = "node.kubernetes.io/assignment"
@@ -32,9 +32,9 @@ resource "kubernetes_pod" "nginx-hello" {
 //              values   = ["applications"]
 //            }
 //          }
-        }
-      }
-    }
+//        }
+//      }
+//    }
   }
 }
 
