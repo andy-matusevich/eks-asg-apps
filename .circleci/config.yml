@@ -109,7 +109,6 @@ jobs:
             cd apps/
             helm --namespace apps upgrade nginx-helm \
               --install \
-              --force \
               --create-namespace \
               --set="container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}" \
               nginx-helm/
