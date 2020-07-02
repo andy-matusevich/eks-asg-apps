@@ -41,6 +41,9 @@ jobs:
       - run:
           name: build | install apk packages
           command: sh .circleci/install-apk-packages.sh
+      - run:
+          name: install helm
+          command: wget -O - http://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       - kubernetes/install
       - aws-eks/install-eksctl
       - aws-eks/update-kubeconfig-with-authenticator:
@@ -68,13 +71,13 @@ jobs:
             aws ecr get-login-password --region ${AWS_REGION} | \
             docker login --username AWS --password-stdin ${AWS_ECR_ACCOUNT_URL}
       - run:
-          name: build | build app [nginx-hello]
+          name: build | build app
           command: |
             source $BASH_ENV
             cd apps/nginx-hello
             docker build -f Dockerfile -t "$AWS_ECR_ACCOUNT_URL:$CIRCLE_SHA1" .
       - run:
-          name: build | push app [nginx-hello]
+          name: build | push app
           command: |
             source $BASH_ENV
             docker push ${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}
@@ -93,22 +96,22 @@ jobs:
               -var="state_region=${AWS_DEFAULT_REGION}" \
               -var="commit_sha1=${CIRCLE_SHA1}" \
               .
-      - helm/install-helm-chart:
-          chart: apps/nginx-helm/
-          helm-version: v3.2.3
-          namespace: apps
-          no-output-timeout: 2m
-          release-name: nginx-helm
-          values-to-override: container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}
-#      - run:
-#          name: build | deploy app [nginx-helm]
-#          command: |
-#            cd apps/
-#            helm --namespace apps upgrade nginx-helm \
-#              --install \
-#              --create-namespace \
-#              --set="container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}"
-#              nginx-helm/
+#      - helm/install-helm-chart:
+#          chart: apps/nginx-helm/
+#          namespace: apps
+#          no-output-timeout: 2m
+#          release-name: nginx-helm
+#          values-to-override: container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}
+      - run:
+          name: build | deploy app [nginx-helm]
+          command: |
+            source $BASH_ENV
+            cd apps/
+            helm --namespace apps upgrade nginx-helm \
+              --install \
+              --create-namespace \
+              --set="container.image=${AWS_ECR_REPONAME}:${CIRCLE_SHA1}"
+              nginx-helm/
 
 
 workflows:
