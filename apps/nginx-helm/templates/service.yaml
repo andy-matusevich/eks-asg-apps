@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.Version }}
     app.kubernetes.io/managed-by: Helm
 spec:
+  type: ClusterIP
   ports:
   - port: {{ .Values.service.port }}
     protocol: {{ .Values.service.protocol | quote }}
@@ -19,4 +20,3 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 10800
-  type: {{ .Values.service.type | quote }}
