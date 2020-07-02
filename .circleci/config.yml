@@ -94,7 +94,7 @@ jobs:
               -var="commit_sha1=${CIRCLE_SHA1}" \
               .
       - helm/install-helm-chart:
-          chart: nginx-helm/
+          chart: apps/nginx-helm/
           helm-version: v3.2.3
           namespace: apps
           no-output-timeout: 2m
