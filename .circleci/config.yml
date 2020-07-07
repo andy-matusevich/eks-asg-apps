@@ -57,6 +57,11 @@ jobs:
               -backend-config="key=${CI_ENVIRONMENT}/${AWS_REGION}/applications.tfstate" \
               -backend-config="bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
               -backend-config="region=${AWS_DEFAULT_REGION}"
+            terraform refresh \
+              -var="state_bucket=${CIRCLE_INFRA_PROJECT_REPONAME}" \
+              -var="state_bucket_key=${CI_ENVIRONMENT}/${AWS_REGION}/aws_infra.tfstate" \
+              -var="state_region=${AWS_DEFAULT_REGION}" \
+              -var="commit_sha1=${CIRCLE_SHA1}"
             echo "export AWS_ECR_ACCOUNT_URL=$(terraform output ecr_registry_url)" >> $BASH_ENV
             echo "export AWS_ECR_REPONAME=$(terraform output ecr_repository_name)" >> $BASH_ENV
       - run:
