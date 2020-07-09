@@ -94,12 +94,26 @@ resource "kubernetes_deployment" "nginx-hello" {
 
           resources {
             limits {
-              cpu    = "0.5"
-              memory = "128Mi"
+              cpu    = "150m"
+              memory = "50Mi"
             }
             requests {
-              cpu    = "200m"
-              memory = "50Mi"
+              cpu    = "100m"
+              memory = "30Mi"
+            }
+          }
+        }
+
+        affinity {
+          node_affinity {
+            required_during_scheduling_ignored_during_execution {
+              node_selector_term {
+                match_expressions {
+                  key      = "node.kubernetes.io/assignment"
+                  operator = "In"
+                  values   = ["applications"]
+                }
+              }
             }
           }
         }

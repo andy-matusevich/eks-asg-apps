@@ -30,10 +30,19 @@ spec:
         name: {{ .Values.app.name | quote }}
         resources:
           limits:
-            cpu: 250m
-            memory: 100Mi
+            cpu: 150m
+            memory: 50Mi
           requests:
             cpu: 100m
-            memory: 50Mi
+            memory: 30Mi
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/assignment
+                    operator: In
+                    values:
+                      - applications
