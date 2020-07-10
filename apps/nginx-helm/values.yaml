@@ -6,6 +6,10 @@ container:
   image: 476148382817.dkr.ecr.us-east-2.amazonaws.com/eks-asg-tests:latest
   port: 80
 
+metrics:
+  name: nginx-prometheus-exporter
+  image: nginx/nginx-prometheus-exporter:0.8.0
+
 service:
   type: ClusterIP
   port: 80

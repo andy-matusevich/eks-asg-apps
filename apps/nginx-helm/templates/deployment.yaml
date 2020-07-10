@@ -23,6 +23,10 @@ spec:
     metadata:
       labels:
         app: {{ .Values.app.name | quote }}
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9113"
+        prometheus.io/scrape: "true"
     spec:
       containers:
       - image: {{ .Values.container.image }}
@@ -35,6 +39,13 @@ spec:
           requests:
             cpu: 100m
             memory: 30Mi
+      - image: {{ .Values.metrics.image }}
+        imagePullPolicy: IfNotPresent
+          name: {{ .Values.metrics.name | quote }}
+          resources:
+            limits:
+              cpu: 100m
+              memory: 50Mi
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       affinity:
