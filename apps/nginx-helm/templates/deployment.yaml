@@ -42,10 +42,10 @@ spec:
       - image: {{ .Values.metrics.image }}
         imagePullPolicy: IfNotPresent
         name: {{ .Values.metrics.name | quote }}
-          resources:
-            limits:
-              cpu: 100m
-              memory: 50Mi
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       affinity:
