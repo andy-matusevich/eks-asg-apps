@@ -12,6 +12,7 @@ resource "kubernetes_namespace" "apps" {
 resource "kubernetes_pod" "nginx-hello" {
   metadata {
     name   = var.nginx-hello-name
+    namespace = kubernetes_namespace.apps.metadata[0].name
     labels = {
       app = var.nginx-hello-name
     }
@@ -22,19 +23,6 @@ resource "kubernetes_pod" "nginx-hello" {
       image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
       name  = var.nginx-hello-name
     }
-//    affinity {
-//      node_affinity {
-//        required_during_scheduling_ignored_during_execution {
-//          node_selector_term {
-//            match_expressions {
-//              key      = "node.kubernetes.io/assignment"
-//              operator = "In"
-//              values   = ["applications"]
-//            }
-//          }
-//        }
-//      }
-//    }
   }
 }
 
@@ -94,7 +82,7 @@ resource "kubernetes_deployment" "nginx-hello" {
 
           resources {
             limits {
-              cpu    = "150m"
+              cpu    = "100m"
               memory = "50Mi"
             }
             requests {
