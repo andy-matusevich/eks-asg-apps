@@ -1,49 +1,14 @@
-variable "nginx-hello-name" {
-  description = "Application name"
-  default     = "nginx-hello"
-}
-
-resource "kubernetes_namespace" "apps" {
-  metadata {
-    name = "apps"
-  }
-}
-
-resource "kubernetes_pod" "nginx-hello" {
-  metadata {
-    name   = var.nginx-hello-name
-    namespace = kubernetes_namespace.apps.metadata[0].name
-    labels = {
-      app = var.nginx-hello-name
-    }
-  }
-
-  spec {
-    container {
-      image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
-      name  = var.nginx-hello-name
-    }
-  }
-}
-
-resource "kubernetes_service" "nginx-hello" {
-  metadata {
-    name      = var.nginx-hello-name
-    namespace = kubernetes_namespace.apps.metadata[0].name
-    labels    = {
-      app = var.nginx-hello-name
-    }
-  }
-  spec {
-    selector         = {
-      app = var.nginx-hello-name
-    }
-    session_affinity = "ClientIP"
-    port {
-      port        = 80
-      target_port = 80
-    }
-  }
+locals {
+  nginx_hello_name             = "nginx-hello"
+  nginx_hello_replicas         = 2
+  nginx_hello_service_port     = 80
+  nginx_hello_target_port      = 80
+  nginx_hello_session_affinity = "ClientIP"
+  nginx_hello_path             = "/nginx-hello"
+  nginx_hello_requests_cpu     = "100m"
+  nginx_hello_requests_memory  = "30Mi"
+  nginx_hello_limits_cpu       = "100m"
+  nginx_hello_limits_memory    = "50Mi"
 }
 
 
@@ -51,47 +16,42 @@ resource "kubernetes_deployment" "nginx-hello" {
   depends_on = [kubernetes_namespace.apps]
 
   metadata {
-    name      = var.nginx-hello-name
+    name      = local.nginx_hello_name
     namespace = kubernetes_namespace.apps.metadata[0].name
     labels    = {
-      app = var.nginx-hello-name
+      app = local.nginx_hello_name
     }
   }
-
   spec {
-    replicas = 2
+    replicas = local.nginx_hello_replicas
 
     selector {
       match_labels = {
-        app = var.nginx-hello-name
+        app = local.nginx_hello_name
       }
     }
-
     template {
       metadata {
         labels = {
-          app = var.nginx-hello-name
+          app = local.nginx_hello_name
         }
       }
-
       spec {
         container {
           image = "${data.terraform_remote_state.aws.outputs.ecr_registry_url}:${var.commit_sha1}"
-          name  = var.nginx-hello-name
-
+          name  = local.nginx_hello_name
 
           resources {
-            limits {
-              cpu    = "100m"
-              memory = "50Mi"
-            }
             requests {
-              cpu    = "100m"
-              memory = "30Mi"
+              cpu    = local.nginx_hello_requests_cpu
+              memory = local.nginx_hello_requests_memory
+            }
+            limits {
+              cpu    = local.nginx_hello_limits_cpu
+              memory = local.nginx_hello_limits_memory
             }
           }
         }
-
         affinity {
           node_affinity {
             required_during_scheduling_ignored_during_execution {
@@ -99,7 +59,7 @@ resource "kubernetes_deployment" "nginx-hello" {
                 match_expressions {
                   key      = "node.kubernetes.io/assignment"
                   operator = "In"
-                  values   = ["applications"]
+                  values   = [local.kubernetes_node_assignment]
                 }
               }
             }
@@ -110,22 +70,44 @@ resource "kubernetes_deployment" "nginx-hello" {
   }
 }
 
+resource "kubernetes_service" "nginx-hello" {
+  depends_on = [kubernetes_deployment.nginx-hello]
+
+  metadata {
+    name      = local.nginx_hello_name
+    namespace = kubernetes_namespace.apps.metadata[0].name
+    labels    = {
+      app = local.nginx_hello_name
+    }
+  }
+  spec {
+    selector         = {
+      app = local.nginx_hello_name
+    }
+    session_affinity = local.nginx_hello_session_affinity
+    port {
+      port        = local.nginx_hello_service_port
+      target_port = local.nginx_hello_target_port
+    }
+  }
+}
+
 resource "kubernetes_ingress" "nginx-hello" {
   depends_on = [kubernetes_deployment.nginx-hello]
 
   spec {
     backend {
       service_name = kubernetes_deployment.nginx-hello.metadata[0].name
-      service_port = "80"
+      service_port = local.nginx_hello_service_port
     }
     rule {
       http {
         path {
           backend {
             service_name = kubernetes_deployment.nginx-hello.metadata[0].name
-            service_port = "80"
+            service_port = local.nginx_hello_service_port
           }
-          path = "/nginx-hello"
+          path = local.nginx_hello_path
         }
       }
     }
