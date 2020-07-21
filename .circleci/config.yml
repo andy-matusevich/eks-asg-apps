@@ -110,7 +110,7 @@ jobs:
             helm --namespace apps upgrade nginx-helm \
               --install \
               --create-namespace \
-              --set="container.image=${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}" \
+              --set="app.container.image=${AWS_ECR_ACCOUNT_URL}:${CIRCLE_SHA1}" \
               nginx-helm/
 
 
