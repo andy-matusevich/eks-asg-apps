@@ -113,12 +113,17 @@ resource "kubernetes_ingress" "nginx-hello" {
       }
     }
     tls {
-      hosts = ["amatusevich.me"]
+      hosts       = ["amatusevich.me"]
       secret_name = "amatusevich.me-hello"
     }
   }
   metadata {
-    name      = kubernetes_deployment.nginx-hello.metadata[0].name
-    namespace = kubernetes_namespace.apps.metadata[0].name
+    name        = kubernetes_deployment.nginx-hello.metadata[0].name
+    namespace   = kubernetes_namespace.apps.metadata[0].name
+    annotations = {
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "9113"
+      prometheus.io/scrape: "true"
+    }
   }
 }
