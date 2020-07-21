@@ -7,7 +7,7 @@ spec:
     serviceName: {{ .Values.app.name }}
     servicePort: {{ .Values.service.port }}
   rules:
-  {{- range .Values.server.hosts }}
+  {{- range .Values.ingress.hosts }}
     {{- $url := splitList "/" . }}
     - host: {{ first $url }}
       http:
@@ -17,7 +17,7 @@ spec:
             servicePort: {{ .Values.service.port }}
           path: /{{ rest $url | join "/" }}
   {{- end -}}
-{{- if .Values.server.ingress.tls }}
+{{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.server.ingress.tls | indent 4 }}
 {{- end -}}
