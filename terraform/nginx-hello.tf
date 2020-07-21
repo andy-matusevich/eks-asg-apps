@@ -121,9 +121,9 @@ resource "kubernetes_ingress" "nginx-hello" {
     name        = kubernetes_deployment.nginx-hello.metadata[0].name
     namespace   = kubernetes_namespace.apps.metadata[0].name
     annotations = {
-      prometheus.io/path: "/metrics"
-      prometheus.io/port: "9113"
-      prometheus.io/scrape: "true"
+      "prometheus.io/path"   = "/metrics"
+      "prometheus.io/port"   = "9113"
+      "prometheus.io/scrape" = "true"
     }
   }
 }
