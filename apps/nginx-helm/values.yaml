@@ -1,27 +1,22 @@
 app:
   name: nginx-helm
   replicas: 2
-
-container:
-  image: 476148382817.dkr.ecr.us-east-2.amazonaws.com/eks-asg-tests:latest
-  port: 80
-
-metrics:
-  name: nginx-prometheus-exporter
-  image: nginx/nginx-prometheus-exporter:0.8.0
-
-service:
-  type: ClusterIP
-  port: 80
-  protocol: TCP
-
-ingress:
-  hosts:
-    - amatusevich.me/helm
-    - staging.amatusevich.me/helm
-  tls:
-    - secretName: amatusevich.me-helm
-      hosts:
-      - amatusevich.me
-      - staging.amatusevich.me
-
+  container:
+    image: 476148382817.dkr.ecr.us-east-2.amazonaws.com/eks-asg-tests:latest
+    port: 80
+  metrics:
+    name: nginx-prometheus-exporter
+    image: nginx/nginx-prometheus-exporter:0.8.0
+  service:
+    type: ClusterIP
+    port: 80
+    protocol: TCP
+  ingress:
+    hosts:
+      - amatusevich.me/helm
+      - staging.amatusevich.me/helm
+    tls:
+      - secretName: amatusevich.me-helm
+        hosts:
+        - amatusevich.me
+        - staging.amatusevich.me
