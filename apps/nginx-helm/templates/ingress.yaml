@@ -1,15 +1,23 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ .Values.app.name | quote }}
+  name: {{ .Values.app.name }}
 spec:
   backend:
-    serviceName: {{ .Values.app.name | quote }}
+    serviceName: {{ .Values.app.name }}
     servicePort: {{ .Values.service.port }}
   rules:
-  - http:
-      paths:
-      - backend:
-          serviceName: {{ .Values.app.name | quote }}
-          servicePort: {{ .Values.service.port }}
-        path: {{ .Values.service.path | quote }}
+  {{- range .Values.server.hosts }}
+    {{- $url := splitList "/" . }}
+    - host: {{ first $url }}
+      http:
+        paths:
+        - backend:
+            serviceName: {{ .Values.app.name }}
+            servicePort: {{ .Values.service.port }}
+          path: /{{ rest $url | join "/" }}
+  {{- end -}}
+{{- if .Values.server.ingress.tls }}
+  tls:
+{{ toYaml .Values.server.ingress.tls | indent 4 }}
+{{- end -}}

@@ -14,5 +14,14 @@ service:
   type: ClusterIP
   port: 80
   protocol: TCP
-  path: /nginx-helm
+
+ingress:
+  hosts:
+    - amatusevich.me/helm
+    - staging.amatusevich.me/helm
+  tls:
+    - secretName: amatusevich.me-helm
+      hosts:
+        - amatusevich.me
+        - staging.amatusevich.me
 

@@ -4,7 +4,7 @@ locals {
   nginx_hello_service_port     = 80
   nginx_hello_target_port      = 80
   nginx_hello_session_affinity = "ClientIP"
-  nginx_hello_path             = "/nginx-hello"
+  nginx_hello_path             = "/hello"
   nginx_hello_requests_cpu     = "100m"
   nginx_hello_requests_memory  = "30Mi"
   nginx_hello_limits_cpu       = "100m"
@@ -101,6 +101,7 @@ resource "kubernetes_ingress" "nginx-hello" {
       service_port = local.nginx_hello_service_port
     }
     rule {
+      host = "amatusevich.me"
       http {
         path {
           backend {
@@ -110,6 +111,10 @@ resource "kubernetes_ingress" "nginx-hello" {
           path = local.nginx_hello_path
         }
       }
+    }
+    tls {
+      hosts = ["amatusevich.me"]
+      secret_name = "amatusevich.me-hello"
     }
   }
   metadata {

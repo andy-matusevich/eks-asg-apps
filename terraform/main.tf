@@ -23,12 +23,12 @@ variable "commit_sha1" {}
 locals {
   # common vars
   kubernetes_node_assignment = "applications"
-  kubernetes_namespace       = "apps"
+  kubernetes_namespace_apps  = "apps"
 }
 
 resource "kubernetes_namespace" "apps" {
   metadata {
-    name = local.kubernetes_namespace
+    name = local.kubernetes_namespace_apps
   }
 }
 
