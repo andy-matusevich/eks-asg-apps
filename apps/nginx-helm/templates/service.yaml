@@ -11,9 +11,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: {{ .Values.service.port }}
-    protocol: {{ .Values.service.protocol | quote }}
-    targetPort: {{ .Values.container.port }}
+  - port: {{ .Values.app.service.port }}
+    protocol: {{ .Values.app.service.protocol | quote }}
+    targetPort: {{ .Values.app.container.port }}
   selector:
     app: {{ .Values.app.name | quote }}
   sessionAffinity: ClientIP

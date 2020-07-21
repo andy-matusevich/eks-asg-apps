@@ -29,7 +29,7 @@ spec:
         prometheus.io/scrape: "true"
     spec:
       containers:
-      - image: {{ .Values.container.image }}
+      - image: {{ .Values.app.container.image }}
         imagePullPolicy: IfNotPresent
         name: {{ .Values.app.name | quote }}
         resources:
@@ -39,9 +39,9 @@ spec:
           requests:
             cpu: 100m
             memory: 30Mi
-      - image: {{ .Values.metrics.image }}
+      - image: {{ .Values.app.metrics.image }}
         imagePullPolicy: IfNotPresent
-        name: {{ .Values.metrics.name | quote }}
+        name: {{ .Values.app.metrics.name | quote }}
         resources:
           limits:
             cpu: 100m
