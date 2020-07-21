@@ -16,8 +16,8 @@ spec:
             serviceName: {{ .Values.app.name }}
             servicePort: {{ .Values.service.port }}
           path: /{{ rest $url | join "/" }}
-  {{- end -}}
-{{- if .Values.ingress.tls }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.server.ingress.tls | indent 4 }}
-{{- end -}}
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{ end -}}

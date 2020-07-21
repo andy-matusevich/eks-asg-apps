@@ -22,6 +22,6 @@ ingress:
   tls:
     - secretName: amatusevich.me-helm
       hosts:
-        - amatusevich.me
-        - staging.amatusevich.me
+      - amatusevich.me
+      - staging.amatusevich.me
 
