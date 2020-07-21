@@ -1,3 +1,5 @@
+{{- $serviceName := .Values.app.name }}
+{{- $servicePort := .Values.app.service.port -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -5,19 +7,19 @@ metadata:
 spec:
   backend:
     serviceName: {{ .Values.app.name }}
-    servicePort: {{ .Values.service.port }}
+    servicePort: {{ .Values.app.service.port }}
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- range .Values.app.ingress.hosts }}
     {{- $url := splitList "/" . }}
     - host: {{ first $url }}
       http:
         paths:
         - backend:
-            serviceName: {{ .Values.app.name }}
-            servicePort: {{ .Values.service.port }}
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
           path: /{{ rest $url | join "/" }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.app.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
+{{ toYaml .Values.app.ingress.tls | indent 4 }}
   {{ end -}}
