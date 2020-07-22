@@ -34,18 +34,18 @@ spec:
         name: {{ .Values.app.name | quote }}
         resources:
           limits:
-            cpu: 150m
+            cpu: 100m
             memory: 50Mi
           requests:
-            cpu: 100m
+            cpu: 50m
             memory: 30Mi
       - image: {{ .Values.app.metrics.image }}
         imagePullPolicy: IfNotPresent
         name: {{ .Values.app.metrics.name | quote }}
         resources:
           limits:
-            cpu: 100m
-            memory: 50Mi
+            cpu: 50m
+            memory: 20Mi
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       affinity:

@@ -5,7 +5,7 @@ locals {
   nginx_hello_target_port      = 80
   nginx_hello_session_affinity = "ClientIP"
   nginx_hello_path             = "/hello"
-  nginx_hello_requests_cpu     = "100m"
+  nginx_hello_requests_cpu     = "50m"
   nginx_hello_requests_memory  = "30Mi"
   nginx_hello_limits_cpu       = "100m"
   nginx_hello_limits_memory    = "50Mi"
@@ -113,8 +113,8 @@ resource "kubernetes_ingress" "nginx-hello" {
       }
     }
     tls {
-      hosts       = ["amatusevich.me"]
-      secret_name = "amatusevich.me-hello"
+      hosts       = ["amatusevich.me", "staging.amatusevich.me"]
+      secret_name = "amatusevich.me-tls-hello"
     }
   }
   metadata {
